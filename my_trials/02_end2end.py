@@ -60,6 +60,7 @@ housing["income_cat"].hist()
 # %%
 housing["income_cat"].value_counts()
 # %%
+#Stratified sampling on income_cat variable
 from sklearn.model_selection import StratifiedShuffleSplit
 
 split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
@@ -82,4 +83,11 @@ strat_test_set["income_cat"].value_counts()
 # %%
 #Training set - percentage value sorted by index
 100*(strat_train_set["income_cat"].value_counts().sort_index() / len(strat_train_set))
+# %%
+#dropping variable income_cat as only needed for stratified sampling
+for dfs in (strat_test_set, strat_train_set):
+    dfs.drop("income_cat", axis=1, inplace=True)
+# %%
+for dfs in (strat_test_set, strat_train_set):
+    dfs.info()
 # %%
