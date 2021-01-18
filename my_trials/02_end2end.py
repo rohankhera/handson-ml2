@@ -40,4 +40,46 @@ housing.hist(bins=50, figsize=(20,15))
 plt.show()
 # %%
 housing.hist(bins=50, figsize=(10,10))
+# %% {Focusing on scikit learn sampling}
+# %%
+from sklearn.model_selection import train_test_split
+train_set, test_set = train_test_split(housing, test_size=0.2, random_state=42)
+# %%
+train_set.info()
+# %%
+test_set.info()
+# %%
+housing["median_income"].hist()
+# %%
+import numpy as np 
+housing["income_cat"] = pd.cut(housing["median_income"],
+                             bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+                               labels=[1, 2, 3, 4, 5])
+# %%
+housing["income_cat"].hist()
+# %%
+housing["income_cat"].value_counts()
+# %%
+from sklearn.model_selection import StratifiedShuffleSplit
+
+split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+for train_index, test_index in split.split(housing, housing["income_cat"]):
+    strat_train_set = housing.loc[train_index]
+    strat_test_set = housing.loc[test_index]
+# %%
+# proportion values
+strat_test_set["income_cat"].value_counts() / len(strat_test_set)
+# %%
+#Plain numbers
+strat_test_set["income_cat"].value_counts()
+# %%
+# percentage values
+100*(strat_test_set["income_cat"].value_counts() / len(strat_test_set))
+
+# %%
+#percentage value sorted by index
+100*(strat_test_set["income_cat"].value_counts().sort_index() / len(strat_test_set))
+# %%
+#Training set - percentage value sorted by index
+100*(strat_train_set["income_cat"].value_counts().sort_index() / len(strat_train_set))
 # %%
